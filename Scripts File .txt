@@ -1,0 +1,262 @@
+--Student Table--
+DROP TABLE Student
+CREATE TABLE Student
+(
+    StudentID NUMBER(7,0) NOT NULL, StudentName VARCHAR2(25) NOT NULL,
+    CONSTRAINT Student_PK PRIMARY KEY (StudentID)
+    );
+
+--Rows in Student Table--
+ INSERT INTO Student VALUES
+ (1234545, 'Harry Styles');
+
+  INSERT INTO Student VALUES
+ (1245567, 'Kim Gary');
+
+  INSERT INTO Student VALUES
+ (1234337, 'Scottie Williams');
+
+  INSERT INTO Student VALUES
+ (1222267, 'Carrie Rodgers');
+
+ INSERT INTO Student VALUES
+ (1234567, 'Rich Smith');
+
+ INSERT INTO Student VALUES
+ (1234514, 'Sammy Han');
+ 
+  INSERT INTO Student VALUES
+  (1567921, 'Sara Cooks');
+  
+--Display Student Table--  
+SELECT StudentID, StudentName FROM Student
+ORDER BY StudentName
+
+--Librarian Table--
+DROP TABLE Librarian
+CREATE TABLE Librarian
+(
+    LibrarianID NUMBER(7,0) NOT NULL, LibrarianName VARCHAR2(25) NOT NULL,
+    CONSTRAINT Librarian_PK PRIMARY KEY (LibrarianID)
+);
+
+--Rows in Librarian Table--
+INSERT INTO Librarian VALUES
+ (2231452, 'Patricia Long');
+
+  INSERT INTO Librarian VALUES
+ (2331576, 'Kimberly Rachels');
+
+  INSERT INTO Librarian VALUES
+ (2345678, 'Ron Bonds');
+
+  INSERT INTO Librarian VALUES
+ (2134523, 'Bob Ross');
+
+ INSERT INTO Librarian VALUES
+ (2098432, 'Hans Gerald');
+
+ INSERT INTO Librarian VALUES
+ (2234514, 'Sam Banks');
+ 
+  INSERT INTO Librarian VALUES
+  (2567921, 'Ophelia Ying');
+
+--Display Librarian Table--
+SELECT LibrarianID, LibrarianName FROM Librarian
+ORDER BY LibrarianName
+
+--Item Table--
+DROP TABLE Item
+CREATE TABLE Item
+(
+    ItemID NUMBER(6,0) NOT NULL, Title VARCHAR2(25), ItemType VARCHAR2(25) NOT NULL, ItemLocation VARCHAR2(25),
+    CONSTRAINT Item_PK PRIMARY KEY (ItemID)
+);
+
+-- Item Rows --
+INSERT INTO Item VALUES
+ (333444, 'The Great Gatsby', 'Novel', 'ISBN 9876');
+
+  INSERT INTO Item VALUES
+ (365412, 'WSJ Newspaper', 'Research', 'Front Counter');
+
+  INSERT INTO Item VALUES
+ (369852, 'TI Calculator', 'Equipment', 'Storage Room B11');
+
+  INSERT INTO Item VALUES
+ (374125, 'Bob Ross Movie', 'Media', 'Storage Room B12');
+
+ INSERT INTO Item VALUES
+ (398754, 'Mozart CD', 'Media', 'Storage Room B12');
+
+ INSERT INTO Item VALUES
+ (312668, 'IT', 'Novel', 'ISBN 8765');
+ 
+  INSERT INTO Item VALUES
+  (336655, 'Wired Headphones', 'Equipment', 'Storage Room B11');
+
+--Display Item Table--
+SELECT ItemID, Title, ItemType, ItemLocation FROM Item
+ORDER BY Title
+
+--Fee Table--
+DROP TABLE Fee
+CREATE TABLE Fee
+(
+    FeeID NUMBER(6,0), Amount NUMBER(10), StudentID NUMBER(7,0) NOT NULL,
+    CONSTRAINT Fee_PK PRIMARY KEY (FeeID),
+    CONSTRAINT Fee_FK FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+);
+
+--Fee Rows--
+INSERT INTO Fee VALUES
+ (423321, 25.00, 1234545 );
+
+  INSERT INTO Fee VALUES
+ (444333, 5.00, 1245567);
+
+  INSERT INTO Fee VALUES
+ (465588, 10.00, 1222267);
+ 
+  INSERT INTO Fee VALUES
+  (456792, 7.00, 1567921);
+
+--Display Fee Table--
+SELECT FeeID, Amount, StudentID
+FROM Fee
+ORDER BY StudentID;
+
+--PickupItem Table--
+DROP TABLE PickupItem
+CREATE TABLE PickupItem
+(
+    ReserveID NUMBER(6,0), TimeCreated VARCHAR2(10), DueDate VARCHAR2(10), TimePickup VARCHAR2(10), Verified VARCHAR2(1), StudentID NUMBER(7,0), ItemID NUMBER(6,0), LibrarianID NUMBER(7,0),
+    CONSTRAINT PickupItem_PK PRIMARY KEY (ReserveID),
+    CONSTRAINT PickupItem_FK1 FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    CONSTRAINT PickupItem_FK2 FOREIGN KEY (ItemID) REFERENCES Item(ItemID),
+    CONSTRAINT PickupItem_FK3 FOREIGN KEY (LibrarianID) REFERENCES Librarian(LibrarianID)
+);
+
+--Rows inserted into PickupItem--
+INSERT INTO PickupItem VALUES
+(55533, '10:36 AM', '2023-12-13', '12:00 PM', 'Y', 1234545, 365412, 2231452);
+
+INSERT INTO PickupItem VALUES
+(55544, '9:20 AM', '2023-12-16', '1:30 PM', 'N', 1234337, 333444, 2331576);
+
+INSERT INTO PickupItem VALUES
+(55522, '5:15 PM', '2023-10-31', '7:30 PM', 'Y', 1222267, 336655, 2231452);
+
+INSERT INTO PickupItem VALUES
+(55511, '2:00 PM', '2023-12-10', '4:00 PM', 'Y', 1234567, 312668, 2231452);
+
+--Display PickupItem Table--
+SELECT ReserveID, TimeCreated, DueDate, Verified, StudentID, ItemID, LibrarianID
+FROM PickupItem;
+
+--ReturnItem Table--
+DROP TABLE ReturnItem
+CREATE TABLE ReturnItem
+(
+    ReserveID NUMBER(6,0), TimeCreated VARCHAR2(10), DueDate VARCHAR2(10), TimePickup VARCHAR2(10), Verified VARCHAR2(1), StudentID NUMBER(7,0), ItemID NUMBER(6,0), LibrarianID NUMBER(7,0),
+    CONSTRAINT ReturnItem_PK PRIMARY KEY (ReserveID),
+    CONSTRAINT ReturnItem_FK1 FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    CONSTRAINT ReturnItem_FK2 FOREIGN KEY (ItemID) REFERENCES Item(ItemID),
+    CONSTRAINT ReturnItem_FK3 FOREIGN KEY (LibrarianID) REFERENCES Librarian(LibrarianID)
+);
+
+--Rows inserted into ReturnItem Table--
+INSERT INTO ReturnItem VALUES
+(55533, '10:36 AM', '2023-12-13', '12:00 PM', 'Y', 1567921, 365412, 2231452);
+
+INSERT INTO ReturnItem VALUES
+(55544, '9:20 AM', '2023-12-16', '1:30 PM', 'N', 1234337, 333444, 2331576);
+
+INSERT INTO ReturnItem VALUES
+(55522, '5:15 PM', '2023-10-31', '7:30 PM', 'Y', 1222267, 336655, 2231452);
+
+INSERT INTO ReturnItem VALUES
+(55511, '2:00 PM', '2023-12-10', '4:00 PM', 'Y', 1234567, 312668, 2231452);
+
+--RenewItem Table--
+DROP TABLE RenewItem
+CREATE TABLE RenewItem
+(
+    ReserveID NUMBER(6,0), TimeCreated VARCHAR2(10), DueDate VARCHAR2(10), TimePickup VARCHAR2(10), Verified VARCHAR2(1), StudentID NUMBER(7,0), ItemID NUMBER(6,0), LibrarianID NUMBER(7,0),
+    CONSTRAINT RenewItem_PK PRIMARY KEY (ReserveID),
+    CONSTRAINT RenewItem_FK1 FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    CONSTRAINT RenewItem_FK2 FOREIGN KEY (ItemID) REFERENCES Item(ItemID),
+    CONSTRAINT RenewItem_FK3 FOREIGN KEY (LibrarianID) REFERENCES Librarian(LibrarianID)
+);
+
+--Insert rows into RenewItem Table--
+INSERT INTO RenewItem VALUES
+(55533, '10:36 AM', '2022-12-13', '12:00 PM', 'Y', 1567921, 365412, 2231452);
+
+INSERT INTO RenewItem VALUES
+(55544, '9:20 AM', '2022-12-16', '1:30 PM', 'N', 1234337, 333444, 2331576);
+
+INSERT INTO RenewItem VALUES
+(55522, '5:15 PM', '2022-10-31', '7:30 PM', 'Y', 1222267, 336655, 2231452);
+
+INSERT INTO RenewItem VALUES
+(55511, '2:00 PM', '2022-12-10', '4:00 PM', 'Y', 1234567, 312668, 2231452);
+
+--Display RenewItem Table--
+SELECT ReserveID, TimeCreated, DueDate, TimePickup, Verified, StudentID, ItemID, LibrarianID
+FROM RenewItem;
+
+--InterlibraryLoanItem Table--
+DROP TABLE InterlibraryLoanItem
+CREATE TABLE InterlibraryLoanItem
+(
+    InterlibraryLoanItemID NUMBER(6,0) NOT NULL, Title VARCHAR2(50), ItemType VARCHAR2(25) NOT NULL, ItemLocation VARCHAR2(25),
+    CONSTRAINT ItemInterlibraryLoan_PK PRIMARY KEY (InterlibraryLoanItemID)
+);
+
+INSERT INTO InterlibraryLoanItem VALUES
+ (733444, 'The Cat and the Hat', 'Novel', 'Sacred Knowledge');
+
+  INSERT INTO InterlibraryLoanItem VALUES
+ (765412, 'Everything, Everywhere, All at Once', 'Media', 'Cognitive Library');
+
+  INSERT INTO InterlibraryLoanItem VALUES
+ (769852, 'Speaker', 'Equipment', 'Blossom Library');
+
+  INSERT INTO InterlibraryLoanItem VALUES
+ (774125, 'Medical Article', 'Research', 'VIP Library');
+
+ INSERT INTO InterlibraryLoanItem VALUES
+ (798754, 'Talking Heads CD', 'Media', 'Underdog Library');
+
+ INSERT INTO InterlibraryLoanItem VALUES
+ (712668, 'Atomic Habits', 'Novel', 'Horizons Knowledge');
+ 
+  INSERT INTO InterlibraryLoanItem VALUES
+  (736655, 'Loaner Chromebook', 'Equipment', 'Choice library');
+
+--Display InterlibraryLoanItem Table--
+SELECT InterlibraryLoanItemID, Title, ItemType, ItemLocation
+FROM InterlibraryLoanItem;
+
+DROP TABLE InterlibraryLoan
+CREATE TABLE InterlibraryLoan
+(
+    ReserveID NUMBER(6,0), RequestForm VARCHAR2(1) NOT NULL, TimeCreated VARCHAR2(10), DueDate VARCHAR2(10), TimePickup VARCHAR2(10), Verified VARCHAR2(1), StudentID NUMBER(7,0), InterlibraryLoanItemID NUMBER(6,0), LibrarianID NUMBER(7,0),
+    CONSTRAINT InterlibraryLoan_PK PRIMARY KEY (ReserveID),
+    CONSTRAINT InterlibraryLoan_FK1 FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    CONSTRAINT InterlibraryLoan_FK2 FOREIGN KEY (InterlibraryLoanItemID) REFERENCES InterlibraryLoanItem(InterlibraryLoanItemID),
+    CONSTRAINT InterlibraryLoan_FK3 FOREIGN KEY (LibrarianID) REFERENCES Librarian(LibrarianID)
+);
+INSERT INTO InterlibraryLoan VALUES
+(65533, 'Y', '9:26 AM', '2023-9-13', '2:00 PM', 'Y', 1234514, 733444, 2567921);
+
+INSERT INTO InterlibraryLoan VALUES
+(65544, 'Y', '9:20 AM', '2023-12-16', '1:30 PM', 'N', 1567921, 769852, 2234514);
+
+INSERT INTO InterlibraryLoan VALUES
+(65522, 'Y', '5:15 PM', '2023-10-31', '7:30 PM', 'Y', 1234545, 798754, 2345678);
+
+INSERT INTO InterlibraryLoan VALUES
+(65511, 'Y', '2:00 PM', '2023-12-10', '4:00 PM', 'Y', 1234337, 736655, 2331576);

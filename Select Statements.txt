@@ -1,0 +1,118 @@
+--SELECT STATEMENTS--
+--(1) Which students have fees due?--
+
+SELECT s.StudentName, f.StudentID, f.FeeID, f.Amount 
+FROM Fee f INNER JOIN Student s
+ON s.StudentID = f.StudentID
+ORDER BY StudentName DESC;
+
+--(2) What is the duedate for students who have requested an interlibrary loan?--
+
+SELECT s.StudentName, s.StudentID, il.DueDate
+FROM Student s JOIN InterlibraryLoan il
+ON s.StudentID = il.StudentID
+ORDER BY il.DueDate DESC;
+
+--OR
+
+SELECT s.StudentName, il.StudentID, il.InterlibraryLoanItemID, il.DueDate
+FROM Student s JOIN InterlibraryLoan i
+ON s.StudentID = il.StudentID
+ORDER BY il.DueDate DESC;
+
+--(3) Which students have items overdue if the current date is 2023-12-31?--
+
+SELECT s.StudentName, p.StudentID, p.DueDate, p.ItemID, i.Title
+FROM Student s, PickupItem p, item i 
+WHERE s.StudentId = p.StudentId AND i.ItemID = p.itemID AND p.DueDate < '2023-12-31'
+ORDER BY s.StudentName DESC;
+
+--(4) Which media items does the library database have?
+
+SELECT Title, ItemID, itemtype
+FROM Item
+WHERE ItemType = 'Media'
+ORDER BY Title DESC;
+
+--(5)  Who has the Great Gatsby checked out?
+
+SELECT s.StudentName, s.StudentID, p.DueDate, i.title 
+FROM Student s 
+JOIN PickupItem p ON s.StudentID = p.StudentID 
+JOIN item i ON i.itemID = p.ItemID 
+WHERE i.title = 'The Great Gatsby'; 
+
+--(6) Student Name starting with "S"?
+
+SELECT * 
+FROM Student
+WHERE StudentName Like 'S%'
+ORDER BY StudentName DESC;
+
+--(7) How many students have issued different Items from Library?
+
+SELECT Student.StudentID, StudentName, DueDate, ItemID 
+FROM Student, PickupItem
+WHERE Student.StudentID = PickupItem.StudentID;
+
+--(8) How many Items are available under each Item Type?
+
+SELECT ItemType, COUNT (ItemType)
+FROM Item
+GROUP BY ItemType
+ORDER BY ItemType DESC;
+
+--(9) Student details who requested for renew?
+
+SELECT Student.Studentid, StudentName, Title, DueDate 
+FROM Student, RenewItem, Item 
+WHERE Student.StudentID = RenewItem.StudentID AND Item.ItemID = RenewItem.ItemID
+ORDER BY StudentName DESC;
+
+--(10) Details of NOVEL available in Library?
+
+SELECT *
+FROM Item 
+WHERE ItemType = 'Novel'
+ORDER BY Title DESC;
+
+--(11) Which librarian was available during the return of an item?
+
+SELECT Librarian.LibrarianID, LibrarianName, Title, DueDate
+FROM Librarian, Item, ReturnItem
+WHERE Librarian.LibrarianID = ReturnItem.LibrarianID AND Item.ItemID = ReturnItem.ItemID
+ORDER BY LibrarianName DESC;
+
+--(12) Items that were verified at every step i.e Pickup, Renew and Return?
+
+SELECT Item.Title, ItemType, 
+PickupItem.verified AS Pickup_Item_Verified, 
+ReturnItem.verified AS Return_Item_Verified, 
+RenewItem.verified AS Renew_Item_Verified
+FROM Item, PickupItem, RenewItem, ReturnItem
+WHERE RenewItem.ItemID = PickupItem.ItemID AND PickupItem.ItemID = RenewItem.ItemID 
+AND RenewItem.ItemID = ReturnItem.ItemID AND PickupItem.verified = 'Y'
+ORDER BY Title DESC;
+
+--(13) Student who reserved either a Research Article or Novel?
+
+SELECT Student.StudentName, Item.Title, Item.ItemType, PickupItem.DueDate
+FROM Student, Item, PickupItem
+WHERE Student.StudentID = PickupItem.StudentID AND PickupItem.ItemID = Item.ItemID
+AND (Item.ItemType = 'Research' OR Item.ItemType = 'Novel')
+ORDER BY StudentName DESC;
+
+--(14) Which book/item is issued by which student?
+
+SELECT Student.StudentID, StudentName, Title, DueDate 
+FROM Student, PickupItem, Item 
+WHERE Student.StudentID = PickupItem.StudentID AND item.itemID = PickupItem.ItemID
+ORDER BY Title DESC;
+
+
+--(15) Librarian who processed InterLibrary Loan with an Unverified item?
+
+SELECT Librarian.LibrarianID, Librarian.LibrarianName, RequestForm, DueDate, Verified
+FROM Librarian, InterLibraryLoan
+WHERE Librarian.LibrarianID = InterLibraryLoan.LibrarianID AND Verified = 'N'
+ORDER BY LibrarianName DESC;
